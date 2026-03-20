@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="hm12:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/hm12_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="hm12" />
+        </element>
+      </element>
+      <element id="library" level="project" name="Maven: mysql:mysql-connector-j:8.0.33" />
+      <element id="javaee-facet-resources" facet="hm12/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить ноутбук</title>
+</head>
+<body>
+<h2>Форма добавления ноутбука</h2>
+<form th:action="@{/save}" th:object="${laptop}" method="post">
+    <p>Бренд: <input type="text" th:field="*{brand}" required /></p>
+    <p>SSD (ГБ): <input type="number" th:field="*{ssd}" /></p>
+    <p>Процессор: <input type="text" th:field="*{cpu}" /></p>
+    <p>Видеокарта: <input type="text" th:field="*{gpu}" /></p>
+    <p>ОС: <input type="text" th:field="*{os}" /></p>
+    <p>Матрица: <input type="text" th:field="*{matrix}" /></p>
+    <p>Разрешение: <input type="text" th:field="*{resolution}" /></p>
+    <p>Сенсорный экран: <input type="checkbox" th:field="*{touch}" /></p>
+    <p>Подсветка клавиатуры: <input type="checkbox" th:field="*{keyboard}" /></p>
+
+    <button type="submit">Сохранить в MySQL</button>
+</form>
+
+<div th:if="${param.success}">
+    <p style="color: green;">Данные успешно отправлены в базу!</p>
+</div>
+</body>
+</html>
