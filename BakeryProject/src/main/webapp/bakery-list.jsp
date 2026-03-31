@@ -23,6 +23,9 @@
         <th>Название изделия</th>
         <th>Описание</th>
         <th>Цена</th>
+        <th>Действия</th>
+
+
     </tr>
     <c:forEach var="item" items="${products}">
         <tr>
@@ -30,6 +33,12 @@
             <td><strong>${item.name}</strong></td>
             <td>${item.description}</td>
             <td class="price">${item.price} руб.</td>
+            <td>
+                <a href="shop?action=delete&id=${item.id}"
+                   onclick="return confirm('Удалить этот шедевр?')">Удалить</a>
+                |
+                <a href="edit-product.jsp?id=${item.id}&name=${item.name}&price=${item.price}&desc=${item.description}">📝 Ред.</a>
+            </td>
         </tr>
     </c:forEach>
 </table>

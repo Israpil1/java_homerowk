@@ -1,52 +1,50 @@
-import java.sql.*;
-import java.util.ArrayList;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import java.util.List;
 
 public class BakeryDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/bakery_db";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = "root";
 
     public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("from Product", Product.class).list();
         }
-
-        try (Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM products");
-             ResultSet rs = preparedStatement.executeQuery()) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                double price = rs.getDouble("price");
-                String description = rs.getString("description");
-
-                products.add(new Product(id, name, price, description));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-
     }
 
     public void addProduct(Product product) {
-        String sql = "INSERT INTO products (name, price, description) VALUES (?, ?, ?)";
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(product); // Просто сохраняем объект
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
 
-        try (Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+    public void deleteProduct(int id) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Product product = session.get(Product.class, id);
+            if (product != null) {
+                session.remove(product);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
 
-            ps.setString(1, product.getName());
-            ps.setDouble(2, product.getPrice());
-            ps.setString(3, product.getDescription());
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
+    public void updateProduct(Product product) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(product);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
     }

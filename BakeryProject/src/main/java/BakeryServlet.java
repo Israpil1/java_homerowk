@@ -15,10 +15,17 @@ public class BakeryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String action = request.getParameter("action");
+
+        if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            bakeryDAO.deleteProduct(id);
+            response.sendRedirect("shop");
+            return;
+        }
+
         List<Product> productList = bakeryDAO.getAllProducts();
-
         request.setAttribute("products", productList);
-
         request.getRequestDispatcher("bakery-list.jsp").forward(request, response);
     }
 
@@ -26,12 +33,19 @@ public class BakeryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+
         String name = request.getParameter("name");
         double price = Double.parseDouble(request.getParameter("price"));
-        String description = request.getParameter("description");
+        String desc = request.getParameter("description");
 
-        Product newProduct = new Product(0, name, price, description);
-        bakeryDAO.addProduct(newProduct);
+        if ("update".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            bakeryDAO.updateProduct(new Product(id, name, price, desc));
+        } else {
+            bakeryDAO.addProduct(new Product(0, name, price, desc));
+        }
 
         response.sendRedirect("shop");
     }
