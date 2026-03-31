@@ -37,7 +37,7 @@
                 <a href="shop?action=delete&id=${item.id}"
                    onclick="return confirm('Удалить этот шедевр?')">Удалить</a>
                 |
-                <a href="edit-product.jsp?id=${item.id}&name=${item.name}&price=${item.price}&desc=${item.description}">📝 Ред.</a>
+                <a href="edit-product.jsp?id=${item.id}&name=${item.name}&price=${item.price}&desc=${item.description}">Ред.</a>
             </td>
         </tr>
     </c:forEach>

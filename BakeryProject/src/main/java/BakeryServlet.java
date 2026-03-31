@@ -1,3 +1,9 @@
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
+import org.thymeleaf.web.servlet.JakartaServletWebApplication;
+import org.thymeleaf.web.IWebExchange;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -6,15 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/shop")
+@WebServlet(urlPatterns = {"/shop", "/delete", "/premium-details", "/standard-details"})
 public class BakeryServlet extends HttpServlet {
-
     private BakeryDAO bakeryDAO = new BakeryDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        String path = request.getServletPath();
         String action = request.getParameter("action");
 
         if ("delete".equals(action)) {
@@ -24,9 +29,30 @@ public class BakeryServlet extends HttpServlet {
             return;
         }
 
-        List<Product> productList = bakeryDAO.getAllProducts();
-        request.setAttribute("products", productList);
-        request.getRequestDispatcher("bakery-list.jsp").forward(request, response);
+        var application = JakartaServletWebApplication.buildApplication(getServletContext());
+        var webExchange = application.buildExchange(request, response);
+        var context = new WebContext(webExchange, webExchange.getLocale());
+        TemplateEngine engine = createTemplateEngine(application);
+
+        if ("/premium-details".equals(path)) {
+            engine.process("premium", context, response.getWriter());
+        } else if ("/standard-details".equals(path)) {
+            engine.process("standard", context, response.getWriter());
+        } else {
+            List<Product> products = bakeryDAO.getAllProducts();
+            context.setVariable("products", products);
+            engine.process("products", context, response.getWriter());
+        }
+    }
+
+    private TemplateEngine createTemplateEngine(JakartaServletWebApplication app) {
+        WebApplicationTemplateResolver resolver = new WebApplicationTemplateResolver(app);
+        resolver.setPrefix("/WEB-INF/templates/");
+        resolver.setSuffix(".html");
+        resolver.setCharacterEncoding("UTF-8");
+        TemplateEngine engine = new TemplateEngine();
+        engine.setTemplateResolver(resolver);
+        return engine;
     }
 
     @Override

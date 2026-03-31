@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Витрина Thymeleaf</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdf5e6; color: #5d4037; }
+        h1 { text-align: center; color: #8b4513; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #d7ccc8; padding: 12px; text-align: left; }
+        th { background-color: #a0522d; color: white; }
+        tr:nth-child(even) { background-color: #f9f4f1; }
+        .price { font-weight: bold; color: #2e7d32; }
+    </style>
+</head>
+<body>
+<h1>Наш ассортимент</h1>
+<table border="1">
+    <tr th:each="p : ${products}">
+        <td th:text="${p.name}">Название</td>
+        <td th:text="${p.price}">Цена</td>
+        <td>
+            <a th:href="@{/shop(action='delete', id=${p.id})}"
+               onclick="return confirm('Точно удалить?')">Удалить</a>
+
+            <span th:if="${p.price > 100}">
+            <a th:href="@{/edit-product(id=${p.id})}" style="color: gold;">VIP Инфо</a>
+        </span>
+            <span th:unless="${p.price > 100}">
+            <a th:href="@{/edit-product(id=${p.id})}">ℹОбычное инфо</a>
+        </span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
