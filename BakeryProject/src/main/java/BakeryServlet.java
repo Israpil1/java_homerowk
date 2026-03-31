@@ -21,4 +21,18 @@ public class BakeryServlet extends HttpServlet {
 
         request.getRequestDispatcher("bakery-list.jsp").forward(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String name = request.getParameter("name");
+        double price = Double.parseDouble(request.getParameter("price"));
+        String description = request.getParameter("description");
+
+        Product newProduct = new Product(0, name, price, description);
+        bakeryDAO.addProduct(newProduct);
+
+        response.sendRedirect("shop");
+    }
 }

@@ -32,5 +32,22 @@ public class BakeryDAO {
             e.printStackTrace();
         }
         return products;
+
+    }
+
+    public void addProduct(Product product) {
+        String sql = "INSERT INTO products (name, price, description) VALUES (?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setString(3, product.getDescription());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
