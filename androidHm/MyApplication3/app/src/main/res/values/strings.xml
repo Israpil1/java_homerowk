@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="num2">Введите число</string>
+    <string name="num1">Введите число</string>
+    <string name="sum">+</string>
+    <string name="ext">-</string>
+    <string name="div">/</string>
+    <string name="mult">*</string>
+    <string name="result">Result</string>
+</resources>
