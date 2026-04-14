@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BaseGame</string>
+    <string name="enter_players_name">Enter Players Name</string>
+    <string name="enter_players_one_name">Enter players one name</string>
+    <string name="enter_players_two_name">Enter players two name</string>
+    <string name="start_game">Start Game</string>
+</resources>
